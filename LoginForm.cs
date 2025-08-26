@@ -49,7 +49,7 @@ namespace Ejercicio1
         {
             string usuario = txtUsuario.Text.Trim();
             string password = txtPassword.Text;
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["RestauranteDb"]?.ConnectionString;
 
             try
             {
