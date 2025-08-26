@@ -47,7 +47,7 @@ namespace Ejercicio1
         {
             string usuario = txtUsuario.Text;
             string password = txtPassword.Text;
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["RestauranteDb"]?.ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
