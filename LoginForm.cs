@@ -47,12 +47,20 @@ namespace Ejercicio1
         {
             string usuario = txtUsuario.Text;
             string password = txtPassword.Text;
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["RestauranteDb"]?.ConnectionString;
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                MessageBox.Show("Cadena de conexión no configurada.");
+                return;
+            }
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 // TODO: validar credenciales utilizando la cadena de conexión
                 connection.Open();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
         }
     }

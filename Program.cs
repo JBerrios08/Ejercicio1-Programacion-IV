@@ -16,7 +16,14 @@ namespace Ejercicio1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            using (var login = new LoginForm())
+            {
+                if (login.ShowDialog() == DialogResult.OK)
+                {
+                    Application.Run(new Form1());
+                }
+            }
         }
     }
 }
