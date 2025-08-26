@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
 namespace Ejercicio1
@@ -49,7 +49,7 @@ namespace Ejercicio1
             string password = txtPassword.Text;
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 // TODO: validar credenciales utilizando la cadena de conexión
                 connection.Open();
