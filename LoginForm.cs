@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Ejercicio1
 {
@@ -45,14 +47,51 @@ namespace Ejercicio1
 
         private void btnIngresar_Click(object sender, EventArgs e)
         {
-            string usuario = txtUsuario.Text;
+            string usuario = txtUsuario.Text.Trim();
             string password = txtPassword.Text;
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                // TODO: validar credenciales utilizando la cadena de conexión
-                connection.Open();
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT COUNT(1) FROM usuarios WHERE usuario = @usuario AND password = @password";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@usuario", usuario);
+                        command.Parameters.AddWithValue("@password", ComputeSha256Hash(password));
+
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        if (count == 1)
+                        {
+                            MessageBox.Show("Inicio de sesión exitoso.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Usuario o contraseña incorrectos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al conectar con la base de datos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string ComputeSha256Hash(string rawData)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }
