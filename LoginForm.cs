@@ -47,7 +47,12 @@ namespace Ejercicio1
         {
             string usuario = txtUsuario.Text;
             string password = txtPassword.Text;
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString ?? string.Empty;
+            connectionString = connectionString
+                .Replace("{DB_SERVER}", Environment.GetEnvironmentVariable("DB_SERVER"))
+                .Replace("{DB_NAME}", Environment.GetEnvironmentVariable("DB_NAME"))
+                .Replace("{DB_USER}", Environment.GetEnvironmentVariable("DB_USER"))
+                .Replace("{DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD"));
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
